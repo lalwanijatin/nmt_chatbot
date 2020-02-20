@@ -1,0 +1,142 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<html>
+    <head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet"/>
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/index2.css') }}">
+        <title>Chat Room</title>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <h3 class=" text-center">Chat With Bot</h3>
+            <div class="messaging">
+                <div class="inbox_msg">
+                    <div class="mesgs">
+                        <div id="messages" class="msg_history">
+                            <!-- <div class="incoming_msg">
+                                <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                                <div class="received_msg">
+                                    <div class="received_withd_msg">
+                                        <p>Test which is a new approach to have all
+                                            solutions
+                                        </p>
+                                        <span class="time_date"> 11:01 AM    |    June 9</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="outgoing_msg">
+                                <div class="sent_msg">
+                                    <p>Test which is a new approach to have all
+                                        solutions
+                                    </p>
+                                    <span class="time_date"> 11:01 AM    |    June 9</span> 
+                                </div>
+                            </div>
+                            <div class="incoming_msg">
+                                <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                                <div class="received_msg">
+                                    <div class="received_withd_msg">
+                                        <p>Test, which is a new approach to have</p>
+                                        <span class="time_date"> 11:01 AM    |    Yesterday</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="outgoing_msg">
+                                <div class="sent_msg">
+                                    <p>Apollo University, Delhi, India Test</p>
+                                    <span class="time_date"> 11:01 AM    |    Today</span> 
+                                </div>
+                            </div>
+                            <div class="incoming_msg">
+                                <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                                <div class="received_msg">
+                                    <div class="received_withd_msg">
+                                        <p>We work directly with our designers and suppliers,
+                                            and sell direct to you, which means quality, exclusive
+                                            products, at a price anyone can afford.
+                                        </p>
+                                        <span class="time_date"> 11:01 AM    |    Today</span>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="type_msg">
+                            <div class="input_msg_write">
+                                <input id="myMessage" type="text" class="write_msg" placeholder="Type a message" />
+                                <button id="sendbutton" class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var scrolled=0;
+            var d = new Date();
+            $(document).ready(function() {
+            	
+            	var socket = io.connect('http://127.0.0.1:5000');
+            
+            	socket.on('connect', function() {
+            		socket.send('User has connected!');
+            	});
+            
+            	socket.on('message', function(msg) {
+            		//$("#messages").append('<li>'+msg+'</li>');
+            		var htmlInner = '<div class="incoming_msg">'
+                                +'<div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"> </div>'
+                                +'<div class="received_msg">'
+                                    +'<div class="received_withd_msg">'
+                                        +'<p>'+msg+'</p>'
+                                        +'<span class="time_date">'+new Date().toLocaleString()+'</span>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>';
+            		$("#messages").append(htmlInner);
+            		scroll_down();
+            		console.log('Received message');
+            	});
+            
+            	$('#sendbutton').on('click', function() {
+            		var msg = $('#myMessage').val();
+            		if(msg === "") return false;
+            		var htmlInner = '<div class="outgoing_msg">'
+                                +'<div class="sent_msg">'
+                                    +'<p>'+msg+'</p>'
+                                    +'<span class="time_date">'+new Date().toLocaleString()+'</span>' 
+                                +'</div>'
+                            +'</div>';
+            		socket.send(msg);
+            		$("#messages").append(htmlInner);
+            		scroll_down();
+            		$('#myMessage').val('');
+            	});
+
+
+
+            	$('#myMessage').keypress(function (e) {
+ 					var key = e.which;
+ 					if(key == 13)  // the enter key code
+  					{
+    					$('#sendbutton').click();
+    					return false;  
+  					}						
+				}); 
+            
+            });
+
+
+            function scroll_down(){
+            	scrolled=scrolled+300;
+
+    			$("#messages").animate({
+        			scrollTop:  scrolled
+    			});
+            }
+        </script>
+    </body>
+</html>
